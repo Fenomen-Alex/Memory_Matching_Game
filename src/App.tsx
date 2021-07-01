@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {MouseEventHandler, useEffect, useState} from 'react';
 import shuffle from 'lodash.shuffle';
 import './App.css';
 
@@ -19,24 +19,55 @@ const pokemons: Array<PokemonType> = [
   {id: 133, name: 'eevee'},
 ];
 
-const doublePokemons: Array<PokemonType> = shuffle([ ...pokemons, ...pokemons ]);
+const doublePokemons: Array<PokemonType> = shuffle([...pokemons, ...pokemons]);
 
 export default function App(): JSX.Element {
+
+  const [opened, setOpened] = useState<number[]>([]);
+
+  const flipCard = (index: number): void => {
+    setOpened(opened => [...opened, index]);
+  }
+
+  useEffect(() => {
+    if (open.length === 2) setTimeout(() => setOpened([]), 800);
+
+  }, [opened])
+
   return (
       <div className="app">
         <div className="cards">
-          {doublePokemons.map((pokemon, index) => (
-              <PokemonCard pokemon={pokemon} key={index}/>
-          ))}
+          {doublePokemons.map((pokemon, index) => {
+                let isFlipped = false;
+
+                if (opened.includes(index)) isFlipped = true;
+
+                return (
+                    <PokemonCard
+                        key={index}
+                        pokemon={pokemon}
+                        isFlipped={isFlipped}
+                        flipCard={flipCard}
+                        index={index}
+                    />
+                )
+              }
+          )}
         </div>
       </div>
   );
 }
 
-const PokemonCard = (props: { pokemon: PokemonType; }): JSX.Element => {
-  const { pokemon } = props;
+const PokemonCard = (props: {
+                       pokemon: PokemonType;
+                       isFlipped: boolean;
+                       flipCard: Function;
+                       index: number;
+                     }): JSX.Element => {
+
+  const {pokemon, isFlipped, flipCard, index} = props;
   return (
-      <div className="pokemon-card">
+      <button onClick={() => flipCard(index)} className={`pokemon-card ${isFlipped ? 'flipped' : ''}`}>
         <div className="inner">
           <div className="front">
             <img
@@ -47,7 +78,7 @@ const PokemonCard = (props: { pokemon: PokemonType; }): JSX.Element => {
           </div>
           <div className="back">?</div>
         </div>
-      </div>
+      </button>
 
   )
 }
