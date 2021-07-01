@@ -9,7 +9,7 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /*align-items: center;*/
   padding: 50px;
   line-height: 1;
   font-family: 'Patrick Hand', sans-serif;
@@ -88,4 +88,44 @@ p strong {
   background: #cc2f49;
   color: #fff;
   transform: scale(1.02);
+}
+.btn-restart {
+  display: flex;
+  justify-content: center;
+}
+
+.restart {
+  background-color: #ae1c35;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  width: 100%;
+}
+
+.play {
+  width: 100%;
+  text-align: center;
+  font-size: 30px;
+  color: #999999;
+}
+
+@media (max-width: 650px) {
+  .cards {
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  }
+  img {
+    width: 60px;
+  }
+  .pokemon-card {
+    width: 80px;
+    height: 80px;
+  }
+  body {
+    align-items: normal;
+    padding: 30px;
+  }
 }

@@ -1,4 +1,4 @@
-import React, {MouseEventHandler, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import shuffle from 'lodash.shuffle';
 import './App.css';
 
@@ -19,28 +19,68 @@ const pokemons: Array<PokemonType> = [
   {id: 133, name: 'eevee'},
 ];
 
-const doublePokemons: Array<PokemonType> = shuffle([...pokemons, ...pokemons]);
+let doublePokemons: Array<PokemonType> = shuffle([...pokemons, ...pokemons]);
 
 export default function App(): JSX.Element {
 
   const [opened, setOpened] = useState<number[]>([]);
+  const [matched, setMatched] = useState<number[]>([]);
+  const [moves, setMoves] = useState(0);
 
   const flipCard = (index: number): void => {
+    if (matched.length !== pokemons.length) setMoves(moves => moves + 1);
     setOpened(opened => [...opened, index]);
   }
+  const restart = () => {
+    setMatched([]);
+    setOpened([]);
+    setMoves(0);
+    doublePokemons = shuffle([...pokemons, ...pokemons])
+  }
 
+  // check if is a match
   useEffect(() => {
-    if (open.length === 2) setTimeout(() => setOpened([]), 800);
+    if (opened.length < 2) return;
+
+    const firstPokemon: PokemonType = doublePokemons[opened[0]];
+    const secondPokemon: PokemonType = doublePokemons[opened[1]];
+
+    if (firstPokemon.name === secondPokemon.name) {
+      setMatched(matched => [...matched, secondPokemon.id])
+    }
+  }, [opened])
+
+  // clear cards if no match
+  useEffect(() => {
+    if (opened.length === 2) setTimeout(() => setOpened([]), 800);
 
   }, [opened])
 
+  // // check if is a winner
+  // useEffect(() => {
+  //   if(matched.length === pokemons.length) alert('You won!');
+  // },[matched])
+
   return (
       <div className="app">
+        {matched.length >= pokemons.length
+            ? (<div className="btn-restart">
+              <button
+                  className="restart"
+                  onClick={() => restart()}
+              >
+                Play again!
+              </button>
+            </div>)
+            : (<h1 className="play">Lets play!</h1>)
+        }
+        <p>{moves}<strong>moves</strong></p>
         <div className="cards">
           {doublePokemons.map((pokemon, index) => {
                 let isFlipped = false;
 
                 if (opened.includes(index)) isFlipped = true;
+                if (matched.includes(pokemon.id)) isFlipped = true;
 
                 return (
                     <PokemonCard
@@ -59,15 +99,19 @@ export default function App(): JSX.Element {
 }
 
 const PokemonCard = (props: {
-                       pokemon: PokemonType;
-                       isFlipped: boolean;
-                       flipCard: Function;
-                       index: number;
-                     }): JSX.Element => {
+  pokemon: PokemonType;
+  isFlipped: boolean;
+  flipCard: Function;
+  index: number;
+}): JSX.Element => {
 
   const {pokemon, isFlipped, flipCard, index} = props;
   return (
-      <button onClick={() => flipCard(index)} className={`pokemon-card ${isFlipped ? 'flipped' : ''}`}>
+      <button
+          onClick={() => flipCard(index)}
+          className={`pokemon-card ${isFlipped ? 'flipped' : ''}`}
+          disabled={isFlipped}
+      >
         <div className="inner">
           <div className="front">
             <img
