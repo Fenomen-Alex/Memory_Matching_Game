@@ -115,7 +115,7 @@ const PokemonCard = (props: {
         <div className="inner">
           <div className="front">
             <img
-                src={`https://pokeres.bastionbot.org/images/pokemon/${pokemon.id}.png`}
+                src={`https://cdn.traction.one/pokedex/pokemon/${pokemon.id}.png`}
                 alt={pokemon.name}
                 width="100"
             />
