@@ -1,132 +1,299 @@
-@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: #19323a;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  /*align-items: center;*/
-  padding: 50px;
-  line-height: 1;
-  font-family: 'Patrick Hand', sans-serif;
+  align-items: center;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
 }
 
-p {
-  text-align: right;
-  font-size: 50px;
-  color: #999;
-  margin-top: 0;
-  margin-bottom: 10px;
-  margin-right: 10px;
+.app {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
 }
 
-p strong {
-  font-size: 14px;
-  color: #777;
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 0 10px;
+}
+
+.game-title {
+  color: white;
+  font-size: 36px;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 0;
+}
+
+.moves-counter {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 12px 24px;
+  border-radius: 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.moves-label {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.moves-value {
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  min-width: 40px;
+  display: inline-block;
 }
 
 .cards {
   display: grid;
-  grid-template: repeat(3, 1fr) / repeat(4, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  perspective: 1000px;
+  margin: 0 auto;
+  max-width: 700px;
 }
 
-.pokemon-card {
-  height: 150px;
-  width: 150px;
-  border-radius: 2px;
+.memory-card {
+  height: 140px;
+  width: 100%;
+  aspect-ratio: 1;
   cursor: pointer;
   background: none;
   border: none;
   outline: none;
-  font-family: 'Patrick Hand', sans-serif;
+  font-family: 'Poppins', sans-serif;
+  transition: transform 0.2s ease;
 }
 
-.pokemon-card.flipped .inner {
+.memory-card:not(:disabled):hover {
+  transform: translateY(-5px);
+}
+
+.memory-card:not(:disabled):active {
+  transform: translateY(-2px);
+}
+
+.memory-card.flipped .card-inner {
   transform: rotateY(180deg);
 }
 
-.inner {
+.card-inner {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: 0.6s cubic-bezier(0.38, 0.02, 0.09, 1.66) all;
+  transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.pokemon-card .front,
-.pokemon-card .back {
+.memory-card .card-front,
+.memory-card .card-back {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 16px;
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-.pokemon-card .front {
-  background: #fff;
+.memory-card .card-front {
+  background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
   transform: rotateY(180deg);
+  border: 3px solid #fff;
 }
 
-.pokemon-card .back {
-  background: #ae1c35;
-  color: #d6aeb5;
-  font-size: 100px;
-  transition: 0.3s ease all;
+.card-emoji {
+  font-size: 64px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-.pokemon-card .back:hover {
-  background: #cc2f49;
-  color: #fff;
-  transform: scale(1.02);
+.memory-card .card-back {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 48px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  border: 3px solid rgba(255, 255, 255, 0.3);
 }
-.btn-restart {
+
+.memory-card:not(:disabled) .card-back:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.question-mark {
+  opacity: 0.8;
+}
+.win-screen {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 20px;
+  padding: 40px;
+  animation: fadeIn 0.5s ease;
 }
 
-.restart {
-  background-color: #ae1c35;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.win-message {
+  color: white;
+  font-size: 42px;
+  font-weight: 700;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  margin: 0;
+}
+
+.win-stats {
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.restart-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   border: none;
   color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
+  padding: 16px 40px;
   font-size: 20px;
-  width: 100%;
+  font-weight: 600;
+  border-radius: 50px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+  font-family: 'Poppins', sans-serif;
+  margin-top: 20px;
 }
 
-.play {
-  width: 100%;
-  text-align: center;
-  font-size: 30px;
-  color: #999999;
+.restart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+  background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
 }
 
-@media (max-width: 650px) {
+.restart-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .game-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .game-title {
+    font-size: 28px;
+  }
+
   .cards {
-    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
   }
-  img {
-    width: 60px;
+
+  .memory-card {
+    height: 110px;
   }
-  .pokemon-card {
-    width: 80px;
-    height: 80px;
+
+  .card-emoji {
+    font-size: 48px;
   }
+
+  .win-message {
+    font-size: 32px;
+  }
+
+  .win-stats {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
   body {
-    align-items: normal;
-    padding: 30px;
+    padding: 15px;
+  }
+
+  .game-title {
+    font-size: 24px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .memory-card {
+    height: 90px;
+  }
+
+  .card-emoji {
+    font-size: 40px;
+  }
+
+  .question-mark {
+    font-size: 36px;
+  }
+
+  .moves-counter {
+    padding: 10px 18px;
+  }
+
+  .moves-label {
+    font-size: 14px;
+  }
+
+  .moves-value {
+    font-size: 20px;
+  }
+
+  .win-message {
+    font-size: 28px;
+  }
+
+  .win-stats {
+    font-size: 18px;
+  }
+
+  .restart-btn {
+    padding: 14px 32px;
+    font-size: 18px;
   }
 }
